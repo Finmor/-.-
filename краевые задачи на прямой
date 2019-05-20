@@ -1,0 +1,517 @@
+\documentclass[a5paper]{article}
+\usepackage[cm]{fullpage}
+\usepackage{cmap}
+\usepackage[T2A]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[english,russian]{babel}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{hyperref}
+\usepackage{enumitem} 
+\usepackage{euscript}
+\usepackage{icomma}
+
+
+\newlist{enum}{enumerate}{10}
+\setlist[enum]{label*=\arabic*.}
+\usepackage{tikz}
+\usetikzlibrary{positioning,arrows,shapes}
+
+\newlist{sectenum}{enumerate}{10}
+\setlist[sectenum]{
+  label=\arabic{section}.\arabic{*}
+}
+
+\newcommand*{\hm}[1]{#1\nobreak\discretionary{}
+	{\hbox{$\mathsurround=0pt #1$}}{}}
+
+\newcounter{through}
+
+\theoremstyle{plain}
+\newtheorem{theorem}[through]{Теорема}
+\newtheorem{corollary}[through]{Следствие}
+\newtheorem{lemma}[through]{Лемма}
+\newtheorem{task}[through]{Задача}
+
+\theoremstyle{definition}
+\newtheorem{definition}[through]{Определение}
+\newtheorem{example}[through]{Пример}
+\newtheorem{remark}[through]{Замечание}
+
+\numberwithin{through}{section}
+\numberwithin{equation}{section}
+
+\DeclareMathOperator{\sgn}{sgn}
+\DeclareMathOperator{\supp}{supp}
+\DeclareMathOperator{\rank}{rank}
+
+\hypersetup{
+  pdftitle={lecture-4sem},
+  pdfauthor={},
+  colorlinks=true,
+  linkcolor=blue
+}
+
+\begin{document}
+	
+	\selectlanguage{russian}
+	
+	\title{Лекции \\
+	по дифференциальным уравнениям\\}
+	\maketitle
+	
+	\begin{abstract}
+		Записки создавались студентами Механико-математического факультета НГУ 
+		с лекций, прочитанных И. И. Матвеевой.
+		\\
+	
+		\textcolor{blue}{~~~Внимание! Записки не подвергались редактуре, поэтому, возможно, содержат множество неточностей, опечаток и смысловых ошибок.} 
+		
+	\end{abstract}
+
+\clearpage
+\tableofcontents
+
+\clearpage
+
+
+\section{Краевые задачи для линейных дифференциальных уравнений.}
+
+\subsection{Краевые задачи на прямой.}
+В этом параграфе рассматриваем задачи вида:
+\begin{equation}
+\label{1}
+\left\{
+\begin{array}{lcl}
+\frac{dy}{dt}=Ay+f(t), t \in \mathbb{R}\\
+\sup\limits_{t \in \mathbb{R}}\|y(t)\|< \infty,\\
+\end{array}
+\right.
+\end{equation}
+где матрица
+$A \in M_{(n \times n)}(\mathbb{C})-const$
+заданная функция $f(t)=
+\left(\begin{array}{cccc}
+f_{1}\\
+f_{2}\\
+\vdots\\
+f_{n}
+\end{array}\right)
+$
+и искомая функция $y(t)=
+\left(\begin{array}{cccc}
+y_{1}\\
+y_{2}\\
+\vdots\\
+y_{n}
+\end{array}\right)
+$.
+
+Приведем несколько примеров.
+\begin{example}
+	$$
+	\left\{
+	\begin{array}{lcl}
+		y'= 1,\\
+		\sup\limits_{t \in \mathbb{R}}|y(t)|< \infty\\
+	\end{array}
+	\right.
+	$$
+	Это случай, когда $n=1$, $A=0$, $f(t)=1$. Решая уравнение, находим, что $y(t)=t+c$. Ясно, что никакое решение приведенного уравнения не является ограниченным на всей числовой прямой. Таким образом, решения у задачи нет.
+\end{example}
+\begin{example}
+	$$
+	\left\{
+	\begin{array}{lcl}
+	y'= y,\\
+	\sup\limits_{t \in \mathbb{R}}|y(t)|< \infty\\
+	\end{array}
+	\right.
+	$$
+	Это случай, когда $n=1$, $A=1$, $f(t)=0$. Легко видеть, что $y(t)=ce^t$ - решение уравнения. Чтобы оно было ограниченным на всей прямой, достаточно положить $c=0$. Таким образом, краевая задача имеет единственное решение $y(t) \equiv 0$.
+\end{example}
+\begin{example}
+	$$
+	\left\{
+	\begin{array}{lcl}
+	y'= y+1,\\
+	\sup\limits_{t \in \mathbb{R}}|y(t)|< \infty\\
+	\end{array}
+	\right.
+	$$
+	Это случай, когда $n=1$, $A=1$, $f(t)=1$. Видно, что $y(t)=ce^t-1$. Как и раньше условие ограниченности выполняется только при $c=0$. Краевая задача имеет единственное решение $y(t) \equiv -1$.
+\end{example}
+\begin{example}
+	$$
+	\left\{
+	\begin{array}{lcl}
+	y'= iy+e^{it},\\
+	\sup\limits_{t \in \mathbb{R}}|y(t)|< \infty\\
+	\end{array}
+	\right.
+	$$
+	Это случай, когда $n=1$, $A=i$, $f(t)=e^{it}$. Решая, получим $y(t)=ce^{it}+e^{it}$. Отсюда видно, что краевая задача решения не имеет. 
+\end{example}
+\begin{theorem}
+	\label{t1}
+	Пусть $\tau_1 \dots \tau_n$ - собственные значения матрицы $A$, при этом $Re(\tau_j) \ne 0, j=1, \dots n$. Тогда для любой непрерывной и ограниченной функции $f(t)$ существует решение задачи (\ref{1}) и оно единственно.
+\end{theorem}
+	\begin{proof}
+		Для начала рассмотрим собственные значения для которых $Re\tau_j<0$.
+		Ясно, что общее решение выглядит имеет вид:
+		\begin{equation}
+			\label{2}
+			y(t)=e^{tA}C+\int\limits_0^te^{(t-s)A}f(s)\,ds
+		\end{equation}
+		При $t>0$ имеем:
+		$$
+			\|y(t)\| \le \|e^{tA}\| \cdot \|C\|+\int\limits_0^t\|e^{(t-s)A}f(s)\|\,ds \le Me^{\frac{\delta}{2}t}\|C\|+\int\limits_0^tMe^{\frac{\delta}{2}(t-s)}F\,ds,
+		$$ где 
+		$F=\sup\limits_{t \in \mathbb{R}}\|f(t)\|$.
+		Таким образом, для любой матрицы $C$ выполнено:
+		$$\|y(t)\| \le Me^{\frac{\delta}{2}t}\|C\|+\frac{2MF}{\delta}(1-e^{\frac{\delta}{2}})< \infty.$$
+		
+		При $t<0$:
+		Допустим, что нашлось решение $y(t)$ краевой задачи (\ref{1}) и $\sup\limits_{t \in \mathbb{R}}\|y(t)\|<\rho <\infty$.(предполагаем это, чтобы получить необходмые условия на $C$ из формулы (\ref{2})).
+		
+		Справедлива оценка: 
+$$\|e^{-tA}y(t)\| \le \|e^{-tA}\|\|y(t)\| \le M\rho e^{\frac{-t\delta}{2}}<\infty $$	
+		Из (\ref{2}) имеем:
+		$$e^{-tA}y(t)=C+\int\limits_0^te^{-sA}f(s)\,ds,$$ тогда
+		$$\|\int\limits_0^te^{-sA}f(s)\,ds\| \le M \rho e^{-\frac{\delta}{2}t}.$$
+		Для того чтобы задача имела решение, необходимо выполнения условия: $\lim\limits_{t \to -\infty } M \rho e^{-\frac{\delta}{2}t}=0$, но это означает, что в таком случае: 
+	$$C=-\int\limits_0^{-\infty}e^{-sA}f(s)\,ds=\int\limits^0_{-\infty}e^{-sA}f(s)\,ds.$$
+		Проверим наше предположение: 
+		\begin{equation}
+			\label{3}
+			y(t)=\int\limits^t_{-\infty}e^{(t-s)A}f(s)\,ds
+		\end{equation}
+		$$\|y(t)\| \le \int\limits^t_{-\infty}\|e^{(t-s)A}f(s)\|\,ds \le \int\limits^t_{-\infty}Me^{(t-s)\frac{\delta}{2}}F\,ds=\left|\frac{2MF}{\delta}\right|$$ 
+		Таким образом решение ограничено.
+		
+		Рассмотрим теперь собственные числа матрицы $A$ такие, что $Re\tau_j>0$.
+		Сделаем замену $\eta=-t$. Тогда $y(t)=y(-\eta)\equiv \tilde{y}(\eta)$. 
+		Очевидно следующее:
+		$$\frac{dy(t)}{dt} \equiv \frac{d\tilde{y}(\eta)}{d\eta}\frac{d\eta}{dt}\equiv -\frac{d\tilde{y}(\eta)}{d\eta}$$
+		$$-\frac{d\tilde{y}}{d\eta}\equiv A\tilde{y}+f(-\eta)$$
+		$$\frac{d\tilde{y}}{d\eta}\equiv -A\tilde{y}+\tilde{f}(\eta),$$ где $\tilde{f}(\eta)=-f(-\eta)$. 
+		Из (\ref{3}):
+		$$\tilde{y}(\eta)=\int\limits^\eta_{-\infty}e^{-(\eta-s)A}\tilde{f}(s)\,ds=-\int\limits^\eta_{-\infty}e^{-(\eta-s)A}f(-s)\,ds$$
+		Сделаем замену $\xi=-s$. Тогда:
+		$$y(t)\equiv \tilde{y}(\eta)=\int\limits^{-\eta}_{+\infty}e^{-(\eta+\xi)A}f(\xi)\,d\xi$$
+		Возвращаясь к первой замене получаем:
+		$$y(t)=-\int\limits_t^{+\infty}e^{(t-\xi)A}f(\xi)\,d\xi.$$
+		Рассуждения, аналогичные первому случаю, приводят к тому, что полученное решение ограничено на всей числовой прямой.
+		
+		Рассмотрим теперь общий случай, то есть ситуацию, когда собственные числа матрицы $A$ произвольного знака с ненулевой вещественной частью.
+		$$A=T\left(
+		\begin{array}{cccc}
+		A_-&0\\
+		0&A_+\\
+		\end{array}
+		\right)T^{-1}$$ 
+		
+		Где $detT\ne 0$, а матрицы $A_-$ и $A_+$ размерностй $m\times m$ и  $(n-m)\times(n-m)$ соответственно, такие, что $Re\tau_j<0$, $j=1\dots m$ и  $Re\tau_j>0$, $j=m+1\dots n$.
+		
+		Задача перепишется в виде:
+		$$\frac{dy}{dt}=T\left(
+		\begin{array}{cccc}
+		A_-&0\\
+		0&A_+\\
+		\end{array}
+		\right)T^{-1}y+f(t)$$
+		$$\frac{d(T^{-1}y)}{dt}=\left(
+		\begin{array}{cccc}
+		A_-&0\\
+		0&A_+\\
+		\end{array}
+		\right)T^{-1}y+T^{-1}f(t)$$
+		Обозначим $v(t)=T^{-1}y$, тогда:
+		$$\frac{dv}{dt}=\left(
+		\begin{array}{cccc}
+		A_-&0\\
+		0&A_+\\
+		\end{array}
+		\right)v+\tilde{f}(t),$$
+		где $\tilde{f}(t)=T^{-1}f(t).$
+		Видно, что возможно представление $v(t)=\left(
+		\begin{array}{lcl}
+		v_-(t)\\
+		v_+(t)\\
+		\end{array}
+		\right)$, где $\tilde{f}(t)=\left(
+		\begin{array}{lcl}
+		\tilde{f}_-(t)\\
+		\tilde{f}_+(t)\\
+		\end{array}
+		\right)$, такое, что
+		$$\frac{dv_-}{dt}=A_-v_-+\tilde{f}_-(t),$$ $$\frac{dv_+}{dt}=A_+v_++\tilde{f}_+(t).$$
+		
+		Но тогда ввиду рассмотренных в начале теоремы случаев имеем:
+		$$v_-(t)=\int\limits_{-\infty}^te^{(t-s)A_-}\tilde{f}_-(s)\,ds,$$ 
+		$$v_+(t)=-\int\limits^{+\infty}_te^{(t-s)A_+}\tilde{f}_+(s)\,ds.$$ 
+		
+		Таким образом получили ограниченное на всей прямой решение: $$y(t)=Tv(t)=T\left(
+		\begin{array}{lcl}
+		v_-(t)\\
+		v_+(t)\\
+		\end{array}
+		\right)$$
+	\end{proof}
+Рассмотрим функцию Хевисайда: $$\theta (t)=
+\left\{
+\begin{array}{lrl}
+1, t>0\\
+0, t<0\\
+\end{array}
+\right.$$
+
+Легко видеть, что полученные при доказательстве предыдущей теоремы функции $v_-(t)$ и $v_+(t)$ представимы в виде:
+$$v_-(t)=\int\limits_{-\infty}^{+\infty}e^{(t-s)A_-}\theta (t-s)\tilde{f}_-(s)\,ds$$
+$$v_+(t)=-\int\limits_{-\infty}^{+\infty}e^{(t-s)A_+}\theta (s-t)\tilde{f}_+(s)\,ds$$
+
+А тогда решение имеет вид:
+$$y(t)=\int\limits_{-\infty}^{+\infty}T\left(
+\begin{array}{cccc}
+e^{(t-s)A_-\theta (t-s)}&0\\
+0&-e^{(t-s)A_+\theta (s-t)}\\
+\end{array}
+\right)T^{-1}f(s\,ds)=\int\limits_{-\infty}^{+\infty}G(t-s)f(s)\,ds,$$
+
+где
+$G(t)=T\left(
+\begin{array}{cccc}
+e^{(t)A_-\theta (t)}&0\\
+0&-e^{(t)A_+\theta (-t)}\\
+\end{array}
+\right)T^{-1}.$
+
+Или в более наглядной форме:
+$$G(t)=\left\{
+\begin{array}{lrl}
+T\left(
+\begin{array}{cccc}
+e^{(t)A_-}&0\\
+0&0\\
+\end{array}
+\right)T^{-1}, t>0,\\
+T\left(
+\begin{array}{cccc}
+0&0\\
+0&-e^{(t)A_+}\\
+\end{array}
+\right)T^{-1}, t<0.\\
+\end{array}
+\right.$$
+
+Докажем несколько свойств матрицы $G$:
+\par\smallskip
+\begin{enumerate}
+\item $\dfrac{dG}{dt}=AG$
+\begin{proof}
+$t>0$
+$$G(t)=T\left(
+\begin{array}{cccc}
+e^{(t)A_-}&0\\
+0&0\\
+\end{array}
+\right)T^{-1}$$	
+$$\frac{dG}{dt}\equiv T\left(
+\begin{array}{cccc}
+A_-e^{(t)A_-}&0\\
+0&0\\
+\end{array}
+\right)T^{-1}$$
+$$AG=T\left(
+\begin{array}{cccc}
+A_-&0\\
+0&A_+\\
+\end{array}
+\right)T^{-1}\cdot
+T\left(
+\begin{array}{cccc}
+e^{(t)A_-}&0\\
+0&0\\
+\end{array}
+\right)T^{-1}=T\left(
+\begin{array}{cccc}
+A_-e^{(t)A_-}&0\\
+0&0\\
+\end{array}
+\right)T^{-1}$$
+$ $
+\end{proof}
+
+\item $\lim\limits_{t\to +0}G(t)-\lim\limits_{t\to -0}G(t)=E$
+\begin{proof}
+	$$\lim\limits_{t\to +0}G(t)=T\left(
+	\begin{array}{cccc}
+	E&0\\
+	0&0\\
+	\end{array}
+	\right)T^{-1}$$
+	$$\lim\limits_{t\to -0}G(t)=T\left(
+	\begin{array}{cccc}
+	0&0\\
+	0&-E\\
+	\end{array}
+	\right)T^{-1}$$
+	$$\lim\limits_{t\to +0}G(t)-\lim\limits_{t\to -0}G(t)=T\left(
+	\begin{array}{cccc}
+	E&0\\
+	0&E\\
+	\end{array}
+	\right)T^{-1}=E.$$
+\end{proof}
+
+\item $\sup\limits_{t \in \mathbb{R}}\|G(t)\|<\infty$
+\begin{proof}
+	Следует из доказательства теоремы \ref{t1}.
+\end{proof}
+\end{enumerate}
+\begin{definition}
+	Матрица $G\in C^1(t>0)\cap C^1(t<0)$ называется матрицей Грина краевой задачи (\ref{1}), если она удовлетворяет свойствам $1)-3)$.
+\end{definition}
+
+\begin{theorem}
+	Пусть $\tau_1 \dots \tau_n$ - собственные значения матрицы $A$, при этом $Re(\tau_j) \ne 0, j=1, \dots n$. Тогда матрица Грина краевой задачи (\ref{1}) существует и единственна.
+\end{theorem}
+\begin{proof}
+	Существование было доказано в теореме \ref{t1}.
+	
+	Докажем единственность:
+	
+	Допустим, что $G_1(t)$ и $G_2(t)$ - матрицы Грина краевой задачи (\ref{1}). Положим $G(t):=G_1(t)-G_2(t)$. Из свойств $1)-3)$ имеем:
+	$$\frac{dG}{dt}=AG(t),$$ 
+	$$\lim\limits_{t\to +0}G(t)-\lim\limits_{t\to -0}G(t)=E-E=0,$$
+	$$\sup\limits_{t \in \mathbb{R}}\|G(t)\|<\infty.$$
+	
+	Но тогда $G\in C^1(t)$ и $\frac{dG}{dt}=AG, t\in \mathbb{R}$.
+	Тогда краевая задача 
+	$$\left\{
+	\begin{array}{lcl}
+	\frac{dG}{dt}=AG, t \in \mathbb{R}\\
+	\sup\limits_{t \in \mathbb{R}}\|G(t)\|< \infty\\
+	\end{array}
+	\right.$$ имеет единственное решение
+	$G(t)\equiv 0$.
+	Что озночает, что $G_1(t)\equiv G_2(t)$.
+\end{proof}
+
+Далее пользуемся обозначениями:
+$$G(+0):=\lim\limits_{t\to +0}G(t)$$
+$$G(-0):=\lim\limits_{t\to -0}G(t)$$
+
+\begin{theorem}
+	Пусть $\tau_1 \dots \tau_n$ - собственные значения матрицы $A$, при этом $Re(\tau_j) \ne 0, j=1, \dots n$. $G(t)$ - матрица Грина краевой задачи (\ref{1}). Тогда  $y(t)=\int\limits_{-\infty}^{+\infty}G(t-s)f(s)\,ds$ - решение краевой задачи (\ref{1}).
+\end{theorem}
+\begin{proof}
+	Пусть $$y(t)=\int\limits_{-\infty}^tG(t-s)f(s)\,ds+\int\limits^{+\infty}_tG(t-s)f(s)\,ds=y^1(t)+y^2(t)$$
+	Это представление нужно, так как $G(t)$ разрывна в нуле.
+	Продифференцировав функции $y^1(t)$ и $y^2(t)$ как интегралы, зависящие от параметра $t$, получим:
+	$$\frac{dy^1(t)}{dt}=G(+0)f(t)+\int\limits_{-\infty}^tAG(t-s)f(s)\,ds,$$
+	$$\frac{dy^2(t)}{dt}=-G(-0)f(t)+\int\limits^{+\infty}_tAG(t-s)f(s)\,ds.$$
+	А тогда:
+	$$\frac{dy(t)}{dt}=(G(+0)-G(-0))f(t)Ay(t)=Ay(t)+f(t),$$
+	что и доказывает теорему.
+\end{proof}
+
+Опишем алгоритм нахождения матрицы Грина краевой задачи (\ref{1}):
+\begin{enumerate}
+	\item Решая $\dfrac{dG}{dt}=AG, t>0$, получим, что $$G(t)=e^{tA}C,$$
+	где $C\in M_{n\times n}$ - постоянная матрица.
+	\item Решая $\dfrac{dG}{dt}=AG, t<0$, получим, что $$G(t)=e^{tA}D,$$
+	где $D\in M_{n\times n}$ - постоянная матрица.
+	\item Из определения матрицы Грина имеем: $C-D=E$, тогда $C=D+E$, где матрица $D$ произвольная.
+\end{enumerate}
+
+\begin{theorem}
+			\label{t4}
+		Пусть $\tau_1 \dots \tau_n$ - собственные значения $P_n(\frac{d}{dt})$, при этом $Re(\tau_j) \ne 0, j=1, \dots n$. Тогда для любой непрерывной и ограниченной функции $\varphi(t)$ существует решение краевой задачи 
+		\begin{equation}
+			\label{7}
+			\left\{
+			\begin{array}{lcl}
+				P_n(\frac{d}{dt})u=\varphi(t), t \in \mathbb{R}\\
+				\sup\limits_{t \in \mathbb{R}}\|u(t)\|< \infty,\\
+			\end{array}
+			\right.
+		\end{equation}
+		и оно единственно.
+\end{theorem}
+\begin{proof}
+	
+	Докажем существование:
+	
+	Ясно, что $y(t)=
+	\left(\begin{array}{cccc}
+	u(t)\\
+	u'(t)\\
+	\vdots\\
+	u^{(n-1)}(t)
+	\end{array}\right)$ - решение системы
+	$\dfrac{dy}{dt}=Ay+f(t)$, где
+	$$A=\left(\begin{array}{ccccc}
+	0 & 1 & 0 &\ldots & 0\\
+	0 & 0 & 1 &\ldots & 0\\
+	\vdots& \vdots &\vdots &\ddots & \vdots\\
+	0 & 0 & 0 &\ldots & 1\\
+	-a_n&-a_{n-1}&-a_{n-2}&\ldots&-a_1
+	\end{array}\right),$$
+	 и $f(t)=
+	\left(\begin{array}{cccc}
+	0\\
+	0\\
+	\vdots\\
+	0\\
+	\varphi(t)
+	\end{array}\right).$ 
+	\par\bigskip
+	По теореме \ref{t1} существует решение:
+	$$y(t)=\int\limits_{-\infty}^{+\infty}G(t-s)f(s)\,ds.$$
+	
+	Докажем единственность:
+	Пусть $u_1(t)$ и $u_2(t)$ - решения краевой задачи (\ref{7}).
+	Положим $u(t):=u_1(t)-u_2(t)$, очевидно, что $P_n(\frac{d}{dt})u=0$.
+	Пусть $\{u^1(t)\cdots u^m(t)\}$ - ФСР отвечающая $Re(\tau_j)<0$, а
+	$\{u^{m+1}(t)\cdots u^n(t)\}$ - ФСР, соответствующая $Re(\tau_j)>0$.
+	Тогда 
+	$$u(t)=\sum\limits_{i=1}^mc_iu^i(t)+\sum\limits_{i=m+1}^nc_iu^i(t)=v(t)+w(t).$$
+	
+	Но, так как $v(t)$ неограничена при $t\to -\infty$, а $w(t)$ неограничена при $t\to +\infty$, то с необходимостью, что
+	$\sup\limits_{t \in \mathbb{R}}\|u(t)\|< \infty$ получаем, что $c_i=0$ для всех $i=1\ldots n$. А это означает, что
+	$u(t)\equiv 0.$ 
+\end{proof}
+
+Рассмотрим матрицу Грина из доказательства предыдущей теоремы:
+$$G(t)=\left(\begin{array}{ccc}
+	g_{11}&\ldots&g_{1n}\\
+	\vdots&\ddots&\vdots\\
+	g_{n1}&\ldots&g_{nn}
+\end{array}\right)$$
+Видно, что последний столбец обладает следующим свойством: $$g_{2n}=g'_{1n},\ldots ,g_{nn}=g^{(n-1)}_{1n}$$
+
+Из построения решения видно, что $P_n(\frac{d}{dt})g_{1n}(t)=0$ при
+$t\ne 0$.
+Ввиду свойств матрицы Грина справедливо следующее: $$g^{(j)}_{1n}(+0)-g^{(j)}_{1n}(-0)=0$$ при $j\le n-2$, и
+$g^{(n-1)}_{1n}(+0)-g^{(n-1)}_{1n}(-0)=1$. А так же верно, что
+$\sup\limits_{t\in \mathbb{R}}\|g_{1n}(t)\|<\infty$.
+
+\begin{definition}
+		Функция $g(t)\in C^n(t>0)\cap C^n(t<0)$, удовлетворяющая условиям:
+	\begin{enumerate}
+		\item $P_n(\frac{d}{dt})g(t)=0$ при $t\ne 0$;
+		\item $g^{(j)}(+0)-g^{(j)}(-0)=0$ при $j\le n-2$, и $g^{(n-1)}(+0)-g^{(n-1)}(-0)=1$;
+		\item $\sup\limits_{t\in \mathbb{R}}\|g(t)\|<\infty$.
+	\end{enumerate} называется функцией Грина краевой задачи (\ref{7}).
+\end{definition}
+
+Фактически нами были доказаны следующие теоремы:
+\begin{theorem}
+	Пусть $\tau_1 \dots \tau_n$ - собственные значения $P_n(\frac{d}{dt})$, при этом $Re(\tau_j) \ne 0, j=1, \dots n$. Тогда для любой непрерывной и ограниченной функции $\varphi(t)$ существует единственно функция Грина задачи (\ref{7}).
+\end{theorem}
+
+\begin{theorem}
+	Пусть $\tau_1 \dots \tau_n$ - собственные значения $P_n(\frac{d}{dt})$, при этом $Re(\tau_j) \ne 0, j=1, \dots n$. Функция $\varphi(t)$ $g(t)$ непрерывна и ограничена.
+	Тогда $$u(t)=\int\limits_{-\infty}^{+\infty}g(t-s)\varphi(s)\,ds$$ - решение краевой задачи (\ref{7}).
+\end{theorem}
+\end{document}
